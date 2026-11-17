@@ -34,3 +34,6 @@ llama.cpp/
 data/train/*.log
 kaggle/data/diyo-sft-v1.jsonl
 data/train/*.csv
+
+# adapter tarballs are release assets, not source
+artifacts/*.tar.gz

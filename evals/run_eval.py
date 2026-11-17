@@ -188,33 +188,33 @@ def main():
         forced = None
         if guard_check:
             forced = guard_identify(item["prompt"]) or guard_check(item["prompt"])
+
         if forced:
             answer = forced
-            if advice is not None:
-            answer, _ = __import__("advice").repair(item["prompt"], answer, advice)
-        fails = check(item, answer)
             print(f"guard {item['id']}: forced refusal")
         elif item["id"] in cache:
             answer = strip_thinking(cache[item["id"]])
-            if advice is not None:
-            answer, _ = __import__("advice").repair(item["prompt"], answer, advice)
-        fails = check(item, answer)
         elif args.replay:
-            fails = ["no cached answer"]
             answer = ""
+            fails = ["no cached answer"]
+            print(f"FAIL {item['id']:<9}  {'; '.join(fails)}")
+            continue
         else:
             try:
                 answer = ask(args.endpoint, args.model, item["prompt"])
             except Exception as exc:  # noqa: BLE001 - surface any transport error
                 answer = ""
                 fails = [f"request failed: {exc}"]
-            else:
-                answer = strip_thinking(answer)
-                cache[item["id"]] = answer
-                cache_path.write_text(
-                    json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
-                if advice is not None:
+                print(f"FAIL {item['id']:<9}  {'; '.join(fails)}")
+                continue
+            answer = strip_thinking(answer)
+            cache[item["id"]] = answer
+            cache_path.write_text(
+                json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
+
+        if advice is not None:
             answer, _ = __import__("advice").repair(item["prompt"], answer, advice)
+
         fails = check(item, answer)
 
         if fails:
