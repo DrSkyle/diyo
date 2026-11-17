@@ -19,6 +19,7 @@ interface Brain {
 object Brains {
     /** Picks the best brain available on this device. */
     fun pick(context: Context): Brain {
+        GroundedBrain.context = context.applicationContext
         val pack = Pack.find(context)
         return if (pack != null) LlamaBrain(pack) else GroundedBrain
     }
@@ -29,8 +30,9 @@ object Brains {
  * Not a language model — but it is honest, offline, cited by content, and never hallucinates.
  */
 object GroundedBrain : Brain {
+    var context: Context? = null
     override fun answer(prompt: String): String? {
-        val hits = Corpus.search(prompt, limit = 1)
+        val hits = Corpus.search(prompt, limit = 1, context = context)
         return hits.firstOrNull()?.text
     }
 }

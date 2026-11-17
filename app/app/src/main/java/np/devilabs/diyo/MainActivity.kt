@@ -74,6 +74,7 @@ private fun DiyoApp() {
     val context = LocalContext.current
     val speak = remember { Speak(context) }
     val brain = remember { Brains.pick(context) }
+    LaunchedEffect(Unit) { Corpus.ensureLoaded(context) }
     val voiceMissing = stringResource(R.string.voice_missing)
     DisposableEffect(Unit) { onDispose { speak.shutdown() } }
 
@@ -113,7 +114,7 @@ private fun DiyoApp() {
                         draft = ""
                         // The guard answers before the model, exactly as it does on the server.
                         val forced = Guard.check(prompt)
-                        val grounded = Corpus.ground(prompt)
+                        val grounded = Corpus.ground(prompt, context)
                         val raw = forced ?: brain.answer(if (grounded.isEmpty()) prompt else "$grounded\n\nप्रश्न: $prompt") ?: missing
                         val reply = Say.forSpeech(raw)
                         messages += Msg(reply, false)
