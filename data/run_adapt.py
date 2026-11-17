@@ -32,6 +32,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--name", required=True)
     ap.add_argument("--estimate", action="store_true")
+    ap.add_argument("--blueprint", default=None, help="path to a blueprint text file")
+    ap.add_argument("--length", default=None, choices=["minimal", "concise", "detailed", "extensive"])
     args = ap.parse_args()
 
     c = Adaption()
@@ -44,17 +46,26 @@ def main():
         raise SystemExit(f"no succeeded dataset named {args.name}")
     log(f"{ds.name}: {ds.row_count} rows, {ds.dataset_id}")
 
+    controls = {}
+    if args.length:
+        controls["length"] = args.length
+    if args.blueprint:
+        controls["blueprint"] = Path(args.blueprint).read_text(encoding="utf-8").strip()
+    extra = {"brand_controls": controls} if controls else {}
+
     if args.estimate:
-        est = c.datasets.adapt(ds.dataset_id, training_type="instruction_dataset", estimate=True)
+        est = c.datasets.adapt(ds.dataset_id, training_type="instruction_dataset",
+                               estimate=True, **extra)
         log(json.dumps(est.model_dump() if hasattr(est, "model_dump") else str(est), indent=1))
         return
 
     res = c.datasets.adapt(
         ds.dataset_id,
         training_type="instruction_dataset",
-        column_mapping={"prompt": "prompt", "completion": "completion"})
-    out_id = getattr(res, "dataset_id", None) or getattr(res, "id", None)
-    log(f"adapt started -> {out_id}")
+        column_mapping={"prompt": "prompt", "completion": "completion"}, **extra)
+    # adapt transforms the dataset in place; the response carries no new id, so poll the source
+    out_id = ds.dataset_id
+    log(f"adapt started in place on {out_id} (run {getattr(res, 'run_id', '?')})")
 
     last = None
     while True:
