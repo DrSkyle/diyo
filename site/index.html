@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>दियो — इन्टरनेट नभए पनि चल्ने नेपाली सहायक</title>
-<meta name="description" content="दियो — इन्टरनेट नभए पनि चल्ने नेपाली सहायक। विमान मोडमा पनि जवाफ, औषधिको मात्रा कहिल्यै भन्दैन, डेटा नेपालमै रहन्छ।">
+<meta name="description" content="दियो — इन्टरनेट नभए पनि चल्ने नेपाली सहायक। बाली, कागजात, स्वास्थ्य, पैसा — जे सोध्नु छ सोध्नुहोस्। जवाफ मात्र होइन, के गर्ने भन्छ। डेटा नेपालमै रहन्छ।">
 <meta name="theme-color" content="#0C0B09">
 <meta property="og:title" content="दियो — Diyo">
 <meta property="og:description" content="A Nepali assistant that answers without a network, on the cheapest Android phone.">
@@ -213,6 +213,14 @@
     margin-bottom: 5px;
   }
   .transcript .diyo .tag { color: var(--lamp); opacity: .8; }
+  .transcript .exchange { padding-top: 18px; }
+  .transcript .exchange + .exchange {
+    margin-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .transcript .exchange p { margin: 10px 0 0; }
+  .transcript .exchange p:first-child { margin-top: 0; }
+
   .transcript .note {
     margin-top: 22px;
     padding-top: 16px;
@@ -354,12 +362,12 @@
 
       <ul class="proof">
         <li>
-          <span class="np">विमान मोडमा पनि जवाफ।</span>
-          <span class="en" lang="en">Answers in airplane mode. No bars, no account, no upload.</span>
+          <span class="np">इन्टरनेट नभए पनि, जे सोध्नु छ सोध्नुहोस्।</span>
+          <span class="en" lang="en">Crops, papers, money, school, health. No bars, no account, no upload.</span>
         </li>
         <li>
-          <span class="np">औषधिको मात्रा कहिल्यै भन्दैन।</span>
-          <span class="en" lang="en">Never states a medicine dose. It triages and names the health post.</span>
+          <span class="np">जवाफ मात्र होइन, के गर्ने भन्छ।</span>
+          <span class="en" lang="en">Concrete steps you can take today, then where to go if it needs a person.</span>
         </li>
         <li>
           <span class="np">तपाईंको आवाज र डेटा नेपालमै रहन्छ।</span>
@@ -368,7 +376,7 @@
       </ul>
     </section>
 
-    <aside class="transcript" aria-label="विमान मोडमा भएको कुराकानी">
+    <aside class="transcript" aria-label="इन्टरनेट नभएको बेलाका तीन कुराकानी">
       <header>
         <span class="dot" aria-hidden="true"></span>
         <span>विमान मोड</span>
@@ -376,18 +384,32 @@
         <span>इन्टरनेट छैन</span>
       </header>
 
-      <p class="user"><span class="tag">प्रयोगकर्ता</span>
-        मेरो बच्चालाई तीन दिनदेखि ज्वरो आएको छ, केही खाइरहेको छैन।</p>
+      <div class="exchange">
+        <p class="user"><span class="tag">कृषि</span>
+          धानको पात पहेँलो हुँदै गयो, के गर्ने?</p>
+        <p class="diyo"><span class="tag">दियो</span>
+          पहिले खेतमा पानी जमेको छ कि छैन हेर्नुहोस्; जमेको छ भने निकास गर्नुहोस्। पातको टुप्पो
+          पहेँलो छ भने नाइट्रोजनको कमी हुन सक्छ, तर मल हाल्नुअघि कृषि प्राविधिकलाई देखाउनुहोस्।
+          गोडेर कीरा छ कि छैन हेर्नुहोस्, र नमुना पात लिएर कृषि ज्ञान केन्द्र जानुहोस्।</p>
+      </div>
 
-      <p class="diyo"><span class="tag">दियो</span>
-        बच्चा कति वर्षको हो? पानी पिउन सक्छ?</p>
+      <div class="exchange">
+        <p class="user"><span class="tag">कागजात</span>
+          नागरिकतामा जन्म मिति गलत छ, सच्याउन के गर्ने?</p>
+        <p class="diyo"><span class="tag">दियो</span>
+          जन्म दर्ता प्रमाणपत्र, नागरिकताको प्रतिलिपि र निवेदन लिएर जिल्ला प्रशासन कार्यालय
+          जानुहोस्। वडा कार्यालयको सिफारिस पनि मागिन्छ। शुल्क र प्रक्रिया बदलिन सक्ने भएकाले
+          त्यहीँ पुष्टि गर्नुहोस्।</p>
+      </div>
 
-      <p class="user"><span class="tag">प्रयोगकर्ता</span>
-        तीन वर्षकी छ, पानी पिउँछे।</p>
-
-      <p class="diyo"><span class="tag">दियो</span>
-        पानी पिउन सक्ने भए पनि तीन दिनको ज्वरो हेर्नुपर्छ। आजै नजिकको स्वास्थ्य चौकी जानुहोस्।
-        सास फेर्न गाह्रो भए तुरुन्तै जानुहोस्।</p>
+      <div class="exchange">
+        <p class="user"><span class="tag">स्वास्थ्य</span>
+          तीन वर्षकी छोरीलाई तीन दिनदेखि ज्वरो छ, खाँदिन।</p>
+        <p class="diyo"><span class="tag">दियो</span>
+          दिनमा धेरै पटक थोरै-थोरै पानी वा जीवनजल दिनुहोस्; झोल र दूध दिइरहनुहोस्। बाक्लो
+          कम्बलमा नबेर्नुहोस्, हल्का तातो पानीको कपडाले पुछ्नुहोस् — चिसो पानी वा रक्सी होइन।
+          तीन दिनभन्दा बढी भएकोले आजै स्वास्थ्य चौकी जानुहोस्; जाँच गर्नुपर्ने हुन सक्छ।</p>
+      </div>
 
       <p class="note">सबै जवाफ फोनभित्रै बन्छ। केही पठाइँदैन।</p>
     </aside>

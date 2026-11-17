@@ -1,1 +1,20 @@
 08:26:47 running iter=0.0 win_rate=None
+08:32:54 succeeded iter=1.0 win_rate=0.371
+downloading artefacts…
+{
+ "run_id": "c4866724-09e6-45ba-ba5d-6ef1d2058dfe",
+ "status": "succeeded",
+ "iterations": 1.0,
+ "best_win_rate": 0.371,
+ "error": "",
+ "credits_before": 2138.0,
+ "credits_after": 2129.0,
+ "credits_spent": 9.0,
+ "finished_at": "2026-11-17T08:33:00+00:00",
+ "files": [
+  {
+   "name": "_download.bin",
+   "bytes": 44241505
+  }
+ ]
+}
