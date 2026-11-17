@@ -6,6 +6,7 @@
 # models and generated data
 *.gguf
 models/
+data/models/
 data/raw/
 data/voice-commons/
 *.wav
