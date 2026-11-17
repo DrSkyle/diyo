@@ -1,9 +1,11 @@
 {
- "rows": 4649,
+ "rows": 5820,
  "sources": [
   "diyo-agriculture-v1.jsonl",
   "diyo-agriculture-v2.jsonl",
+  "diyo-basics-v2.jsonl",
   "diyo-daily-v1.jsonl",
+  "diyo-daily-v2.jsonl",
   "diyo-health-v1.jsonl",
   "diyo-health-v2.jsonl",
   "diyo-paperwork-v1.jsonl",
@@ -13,7 +15,7 @@
   "asr-robust-v0.jsonl"
  ],
  "leaked_eval_cases": 0,
- "avg_completion_chars": 269,
+ "avg_completion_chars": 260,
  "bundled": [
   "score_adapter.py",
   "guard.py",
