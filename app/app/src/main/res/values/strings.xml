@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">दियो</string>
+    <string name="tagline">इन्टरनेट नभए पनि चल्ने नेपाली सहायक</string>
+    <string name="mic">बोल्नुहोस्</string>
+    <string name="heard_idle">तपाईंको प्रश्न सुन्न तयार</string>
+    <string name="heard_placeholder">(आवाज सुनेको) — यो संस्करणमा अझै जोडिएको छैन</string>
+    <string name="offline_note">यो पहिलो ढाँचा मात्र हो: बनावट जाँच्नका लागि। मोडेल, आवाज र अनलाइन खोज अझै छैनन्।</string>
+    <string name="version">संस्करण %1$s</string>
+</resources>

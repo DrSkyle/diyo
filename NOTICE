@@ -1,0 +1,22 @@
+Diyo
+Copyright 2026 Devilabs
+
+This product includes a model derived from:
+    himalaya-ai/himalaya-gemma-4-e2b-it
+    Copyright Himalaya AI Labs
+    Licensed under the Apache License, Version 2.0
+    https://www.apache.org/licenses/LICENSE-2.0
+
+That base model is itself derived from:
+    google/gemma-4-E2B-it
+    Used under the Gemma Terms of Use
+    https://ai.google.dev/gemma/terms
+
+Diyo-1 is a modified version: it was fine-tuned by Devilabs on Nepali instruction and
+safety data, quantised for on-device inference, and packaged with our own evaluation
+harness, offline corpus and voice stack.
+
+The original copyright notice and licence above are retained in full.
+
+Voice models derived from open Nepali speech corpora (OpenSLR SLR54, Mozilla Common Voice
+`ne`) and from `ampixa/nepali-voices-v0`; see `docs/LICENSING.md` for the full list.

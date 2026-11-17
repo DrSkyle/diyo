@@ -1,0 +1,27 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# models and generated data
+*.gguf
+models/
+data/raw/
+data/voice-commons/
+*.wav
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# android
+app/.gradle/
+app/build/
+app/app/build/
+app/local.properties
+*.apk
+*.aab
+
+# misc
+.DS_Store
