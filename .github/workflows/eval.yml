@@ -94,7 +94,7 @@ jobs:
         run: |
           set +e
           python3 evals/run_eval.py --endpoint http://127.0.0.1:8080/v1 \
-            --model "$MODEL_NAME" --data "$EVAL_FILE" --guard --fresh | tee result.txt
+            --model "$MODEL_NAME" --data "$EVAL_FILE" --guard --advice --fresh | tee result.txt
           echo "---- summary ----"
           grep -E "passed|BLOCKING" result.txt || true
           exit 0
