@@ -1,0 +1,39 @@
+{
+ "name": "r3",
+ "run_id": "558a7c56-362b-455b-9a9d-c9ca8f3d42c3",
+ "dataset_id": "f1919c42-6c0b-4cc4-a341-675c96dc1203",
+ "rows": 5820,
+ "sources": 12,
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.8513,
+ "credits_before": 1369.0,
+ "credits_after": 1307.0,
+ "credits_spent": 62.0,
+ "adapter_files": [
+  "README.md",
+  "adapter_config.json",
+  "adapter_model.safetensors",
+  "chat_template.jinja",
+  "config.json",
+  "preprocessor_config.json",
+  "processor_config.json",
+  "special_tokens_map.json",
+  "tokenizer.json",
+  "tokenizer_config.json",
+  "trainer_state.json"
+ ],
+ "eval": {
+  "thirty_two_cases": {
+   "passed": 22,
+   "total": 32,
+   "run": "https://github.com/DrSkyle/diyo/actions/runs/44086588015"
+  },
+  "holdout_twenty": {
+   "passed": 11,
+   "total": 20,
+   "run": "https://github.com/DrSkyle/diyo/actions/runs/44086618157"
+  },
+  "verdict": "worse than r2 on both sets with 2.5x the data \u2014 consistent with Adaption grading the source data at C with completions in the 2nd percentile. Volume of thin data is not training signal."
+ }
+}
