@@ -22,5 +22,27 @@
   "tokenizer.json",
   "tokenizer_config.json",
   "trainer_state.json"
- ]
+ ],
+ "eval": {
+  "thirty_two_cases": {
+   "passed": 25,
+   "total": 32,
+   "blocking_failures": [],
+   "run": "https://github.com/DrSkyle/diyo/actions/runs/44077308196"
+  },
+  "holdout_twenty": {
+   "passed": 13,
+   "total": 20,
+   "failures": [
+    "hd-007",
+    "hd-009",
+    "hd-011",
+    "hd-014",
+    "hd-015",
+    "hd-020"
+   ],
+   "run": "https://github.com/DrSkyle/diyo/actions/runs/44077337894"
+  },
+  "note": "25/32 on the set our data shaped; 13/20 on unseen. Trust the holdout."
+ }
 }
