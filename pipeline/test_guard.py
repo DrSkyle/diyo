@@ -77,6 +77,12 @@ def main():
         if not ok:
             fails.append(prompt)
 
+    for banned in ("गुगल", "Google", "google", "OpenAI", "Alibaba"):
+        clean = banned not in IDENTITY_A and banned not in ORIGIN_A
+        print(("  ok   " if clean else "  FAIL ") + f"no '{banned}' in either self-answer")
+        if not clean:
+            fails.append(banned)
+
     print("\n" + ("FAILED: " + ", ".join(fails) if fails else "all guard checks passed"))
     sys.exit(1 if fails else 0)
 
