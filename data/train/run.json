@@ -1,0 +1,8 @@
+{
+ "run_id": "c4866724-09e6-45ba-ba5d-6ef1d2058dfe",
+ "dataset_id": "af4c4d2f-2b7c-4a95-88f2-e2867b5314cd",
+ "model": "Qwen/Qwen3.5-2B",
+ "augmentation_domain": 900.0,
+ "iterations": 1.0,
+ "started_at": "2026-11-17T13:32:57"
+}

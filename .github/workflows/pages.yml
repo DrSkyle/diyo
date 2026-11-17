@@ -7,9 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -18,14 +16,19 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-      - id: deploy
-        uses: actions/deploy-pages@v4
+
+      # Branch deploy, not an artifact deploy: this account is out of Actions
+      # artifact storage, and publishing three files should not need a bucket.
+      - name: Publish site to gh-pages
+        run: |
+          cd site
+          git init -q -b gh-pages
+          git config user.name "diyo-bot"
+          git config user.email "bot@devilabs.dev"
+          git add -A
+          git commit -q -m "site: publish devilabs.dev"
+          git push -q -f \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            gh-pages

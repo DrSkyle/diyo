@@ -17,14 +17,21 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-      - uses: android-actions/setup-android@v3
+
+      # The runner image ships an Android SDK and sdkmanager. Install only what we
+      # need; do not use android-actions/setup-android, which requests a `tools`
+      # package that no longer exists.
+      - name: Install Android components
+        run: |
+          yes | "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+
       - name: Build APK
         run: ./gradlew --no-daemon assembleDebug
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: diyo-apk
-          path: app/app/build/outputs/apk/debug/*.apk
+
+      - name: Show output
+        run: ls -lh app/build/outputs/apk/debug/
 
   pipeline:
     runs-on: ubuntu-latest

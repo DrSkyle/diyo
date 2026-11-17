@@ -1,0 +1,52 @@
+uploading diyo-behaviour-v0.csv (180 KB) as raw SFT data
+dataset af4c4d2f-2b7c-4a95-88f2-e2867b5314cd status=succeeded rows=195
+
+recommended hyperparams:
+{
+ "model": "Qwen/Qwen3.5-2B",
+ "hyperparams": {
+  "training_type": "lora",
+  "n_epochs": 1.0,
+  "learning_rate": 5e-05,
+  "batch_size": "max",
+  "lora_r": 16.0,
+  "lora_alpha": 32.0,
+  "lora_dropout": 0.0,
+  "lora_trainable_modules": "all-linear",
+  "lr_scheduler_type": "cosine",
+  "min_lr_ratio": 0.1,
+  "scheduler_num_cycles": 0.5,
+  "warmup_ratio": 0.03,
+  "max_grad_norm": 2.0,
+  "weight_decay": 0.0,
+  "train_on_inputs": false,
+  "dpo_beta": null,
+  "dpo_normalize_logratios_by_length": null,
+  "rpo_alpha": null,
+  "simpo_gamma": null
+ }
+}
+
+run c4866724-09e6-45ba-ba5d-6ef1d2058dfe status=running
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
+  running iterations=0.0 win_rate=None
