@@ -1,2 +1,30 @@
 09:05:47 credits before: 1969.0
 09:05:48 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=running, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:07:20 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=running, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:08:52 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=running, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:10:24 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=running, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:11:57 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=running, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:13:29 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=running, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:15:01 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=succeeded, diyo-paperwork-v1=running, diyo-rights-v1=running, diyo-daily-v1=running
+09:16:33 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=succeeded, diyo-paperwork-v1=running, diyo-rights-v1=succeeded, diyo-daily-v1=succeeded
+09:18:05 waiting: diyo-health-v1=succeeded, diyo-agriculture-v1=succeeded, diyo-paperwork-v1=running, diyo-rights-v1=succeeded, diyo-daily-v1=succeeded
+09:19:37 all datasets succeeded
+09:19:37 diyo-health-v1: 200 rows
+09:19:37 diyo-agriculture-v1: 400 rows
+09:19:37 diyo-paperwork-v1: 400 rows
+09:19:37 diyo-rights-v1: 400 rows
+09:19:37 diyo-daily-v1: 400 rows
+{
+ "in": 2385,
+ "kept": 2256,
+ "kept_pct": 94.6,
+ "dropped": {
+  "empty": 9,
+  "not_nepali": 9,
+  "duplicate": 111
+ },
+ "output": "/home/skyayaaaa.guest/diyo/data/train/diyo-behaviour-v1.csv"
+}
+09:19:43 uploaded: status=succeeded rows=2256
+09:19:44 run b7825800-e06d-453d-9a78-b6dc5f9c3134 running
+09:19:45 running iter=0.0 win=None
