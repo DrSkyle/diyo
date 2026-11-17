@@ -24,6 +24,8 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            // signed with the debug key so it can be sideloaded; not for Play
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
