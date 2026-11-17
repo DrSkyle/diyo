@@ -24,3 +24,31 @@
 10:55:53 run 9a6129b2-04ea-45e6-91ba-f29708df5f73 started (5 iterations)
 10:55:53 running iter=0.0 win=None
 11:21:23 running iter=1.0 win=0.4906
+11:43:17 succeeded iter=2.0 win=0.9343
+11:43:48 adapter -> /home/skyayaaaa.guest/diyo/artifacts/diyo-1-lora
+11:43:48 {
+ "name": "r2",
+ "run_id": "9a6129b2-04ea-45e6-91ba-f29708df5f73",
+ "dataset_id": "9465c431-1cb1-4ad4-9b5d-bb1912fd0656",
+ "rows": 2256,
+ "sources": 10,
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.9343,
+ "credits_before": 1369.0,
+ "credits_after": 1369.0,
+ "credits_spent": 0.0,
+ "adapter_files": [
+  "README.md",
+  "adapter_config.json",
+  "adapter_model.safetensors",
+  "chat_template.jinja",
+  "config.json",
+  "preprocessor_config.json",
+  "processor_config.json",
+  "special_tokens_map.json",
+  "tokenizer.json",
+  "tokenizer_config.json",
+  "trainer_state.json"
+ ]
+}
