@@ -1,84 +1,157 @@
 package np.devilabs.diyo
 
-import android.app.Activity
-import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 /**
- * Diyo — stage 0.
+ * Diyo stage 0 — the standard chat layout every open-source chat client uses:
+ * a scrolling message list and a composer pinned to the bottom.
  *
- * One screen, no permissions, no network, no model. It exists to prove the build, and to hold the
- * shape of the product: a lamp, a mic, and an honest answer.
+ * Reference pattern: OSS on-device chat clients (PocketPal AI, Ollama App, both Apache/MIT).
+ * No custom components beyond the bubble alignment.
+ *
+ * The one brand decision is the colour: a warm amber seed instead of the framework default.
  */
-class MainActivity : Activity() {
 
-    private lateinit var heard: TextView
-    private lateinit var answer: TextView
+private data class Msg(val text: String, val fromUser: Boolean)
 
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(56, 120, 56, 56)
-            setBackgroundColor(Color.parseColor("#0E0C0A"))
+        setContent {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = DiyoGold,
+                    onPrimary = androidx.compose.ui.graphics.Color(0xFF1B1206)
+                )
+            ) { DiyoApp() }
         }
+    }
+}
 
-        val title = TextView(this).apply {
-            text = getString(R.string.app_name)
-            textSize = 44f
-            setTextColor(Color.parseColor("#F2C14E"))
-            gravity = Gravity.CENTER
-        }
+private val DiyoGold = androidx.compose.ui.graphics.Color(0xFFC8871B)
 
-        val tagline = TextView(this).apply {
-            text = getString(R.string.tagline)
-            textSize = 16f
-            setTextColor(Color.parseColor("#B9AFA3"))
-            gravity = Gravity.CENTER
-            setPadding(0, 12, 0, 48)
-        }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DiyoApp() {
+    val tagline = stringResource(R.string.tagline)
+    val missing = stringResource(R.string.model_missing)
+    val messages = remember { mutableStateListOf(Msg(tagline, false)) }
+    var draft by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
 
-        heard = TextView(this).apply {
-            text = getString(R.string.heard_idle)
-            textSize = 15f
-            setTextColor(Color.parseColor("#8A8078"))
-            gravity = Gravity.CENTER
-            setPadding(0, 0, 0, 20)
-        }
+    LaunchedEffect(messages.size) {
+        if (messages.isNotEmpty()) listState.animateScrollToItem(messages.lastIndex)
+    }
 
-        answer = TextView(this).apply {
-            text = ""
-            textSize = 20f
-            setTextColor(Color.parseColor("#EFE9E1"))
-            gravity = Gravity.CENTER
-            setPadding(0, 8, 0, 40)
-        }
-
-        val mic = Button(this).apply {
-            text = getString(R.string.mic)
-            textSize = 18f
-            setOnClickListener {
-                // Stage 0 is honest about what it cannot do yet.
-                heard.text = getString(R.string.heard_placeholder)
-                answer.text = getString(R.string.offline_note)
+    Scaffold(
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
+        bottomBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = draft,
+                    onValueChange = { draft = it },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text(stringResource(R.string.composer_hint)) },
+                    maxLines = 4
+                )
+                Button(
+                    onClick = {
+                        val prompt = draft.trim()
+                        if (prompt.isEmpty()) return@Button
+                        messages += Msg(prompt, true)
+                        draft = ""
+                        // The guard answers before the model, exactly as it does on the server.
+                        val forced = Guard.check(prompt)
+                        messages += Msg(
+                            forced ?: Say.forSpeech(missing),
+                            false
+                        )
+                    },
+                    enabled = draft.isNotBlank()
+                ) { Text(stringResource(R.string.send)) }
             }
         }
-
-        val build = TextView(this).apply {
-            text = getString(R.string.version, BuildConfig.VERSION_NAME)
-            textSize = 12f
-            setTextColor(Color.parseColor("#5F5851"))
-            gravity = Gravity.CENTER
-            setPadding(0, 48, 0, 0)
+    ) { inner ->
+        Box(Modifier.fillMaxSize().padding(inner)) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp)
+            ) {
+                items(messages) { m -> Bubble(m) }
+            }
         }
+    }
+}
 
-        listOf(title, tagline, heard, answer, mic, build).forEach { root.addView(it) }
-        setContentView(root)
+@Composable
+private fun Bubble(m: Msg) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = if (m.fromUser) Alignment.End else Alignment.Start
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.large,
+            color = if (m.fromUser) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
+            },
+            modifier = Modifier.widthIn(max = 320.dp)
+        ) {
+            Text(
+                text = m.text,
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (m.fromUser) {
+                    MaterialTheme.colorScheme.onPrimary
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
+            )
+        }
     }
 }

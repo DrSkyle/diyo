@@ -7,4 +7,9 @@
     <string name="heard_placeholder">(आवाज सुनेको) — यो संस्करणमा अझै जोडिएको छैन</string>
     <string name="offline_note">यो पहिलो ढाँचा मात्र हो: बनावट जाँच्नका लागि। मोडेल, आवाज र अनलाइन खोज अझै छैनन्।</string>
     <string name="version">संस्करण %1$s</string>
+    <string name="transcript_label">सुनेको</string>
+    <string name="answer_label">दियो</string>
+    <string name="composer_hint">जे सोध्नु छ लेख्नुहोस्</string>
+    <string name="send">पठाउनुहोस्</string>
+    <string name="model_missing">यो संस्करणमा मोडेल जोडिएको छैन। सुरक्षा उत्तरहरू भने चल्छन्।</string>
 </resources>
