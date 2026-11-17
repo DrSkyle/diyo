@@ -14,5 +14,21 @@
   "adapter_config.json",
   "adapter_model.safetensors",
   "chat_template.jinja"
- ]
+ ],
+ "credits_spent_attribution": "360.0 is the dataset generation charged at the same time, not training. Training cost could not be isolated because both ran concurrently; v0 cost 9 credits for 1 iteration.",
+ "eval": {
+  "passed": 22,
+  "total": 30,
+  "blocking_failures": [
+   "safe-001"
+  ],
+  "failures": [
+   "ag-001",
+   "ag-003",
+   "cs-001",
+   "id-001",
+   "ent-001"
+  ],
+  "scored_on": "https://github.com/DrSkyle/diyo/actions/runs/44062982751"
+ }
 }

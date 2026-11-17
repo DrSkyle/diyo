@@ -1,0 +1,4 @@
+remote: warning: See https://gh.io/lfs for more information.        
+remote: warning: File artifacts/diyo-1-lora/adapter_model.safetensors is 83.28 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+published b7825800-e06d-453d-9a78-b6dc5f9c3134 — eval workflow triggered

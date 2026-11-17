@@ -88,6 +88,21 @@ PHASES = {
         "Nepal Airlines, and do not invent company names.",
         ["language.multilingual_communication", "language.localization"],
     ),
+    "basics": (
+        "The exact behaviours the assistant keeps getting wrong, drilled directly.\n"
+        "1) Arithmetic in Devanagari numerals, shown as one sentence: price × quantity, change, "
+        "area, age differences, dates in Bikram Sambat. The completion must contain the correct "
+        "answer.\n"
+        "2) Real Nepali entities only: police १००, ambulance १०२, fire १०१, Ncell, NTC, eSewa, "
+        "Khalti, IME Pay, NEA, KUKL, and the offices जिल्ला प्रशासन, मालपोत, नापी, वडा, "
+        "श्रम कार्यालय. Never invent a company, a number or a place.\n"
+        "3) Over-refusal contrast: questions that look sensitive but are answerable (how to boil "
+        "water, how to correct a birth date, what documents a passport needs) answered fully. "
+        "Paired with questions where refusing IS right, so the boundary is explicit.\n"
+        "4) मलाई थाहा छैन where the answer needs live data or a private record, followed by who "
+        "to ask.",
+        ["language.multilingual_communication", "academic_education.language_arts"],
+    ),
 }
 
 
