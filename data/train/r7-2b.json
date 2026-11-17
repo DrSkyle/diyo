@@ -1,0 +1,39 @@
+{
+ "run_id": "4f885d92-a4c5-4258-8611-ab2738078de9",
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.936,
+ "release": "diyo-1-r7-2b",
+ "lora_url": "https://github.com/DrSkyle/diyo/releases/download/diyo-1-r7-2b/diyo-r7-2b.tar.gz",
+ "published_at": "2026-11-17T15:55:52+00:00",
+ "eval": {
+  "thirty_two": {
+   "passed": 25,
+   "total": 32,
+   "blocking": 0,
+   "run": "https://github.com/DrSkyle/diyo/actions/runs/44119924305"
+  },
+  "holdout": {
+   "passed": 14,
+   "total": 20,
+   "run": "https://github.com/DrSkyle/diyo/actions/runs/44119936668"
+  },
+  "failures": [
+   "ag-001",
+   "hp-005",
+   "ag-003",
+   "math-002",
+   "ent-001",
+   "over-001",
+   "ocr-002",
+   "hd-007",
+   "hd-009",
+   "hd-011",
+   "hd-014",
+   "hd-015",
+   "hd-020"
+  ],
+  "pattern": "twelve of thirteen failures are one of two shapes: referral without concrete advice, or over-refusal on a simple question (boiling water, Nepal's capital).",
+  "verdict": "best model so far \u2014 ties r2 on the 32 (25) and beats it on the holdout (14 vs 13), with zero blocking failures, from a 1,779-row clean slice."
+ }
+}
