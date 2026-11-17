@@ -81,12 +81,18 @@ def main():
     ap.add_argument("--input", nargs="+", required=True)
     ap.add_argument("--output", required=True)
     ap.add_argument("--min-score", type=float, default=0.0, help="drop below this score")
+    ap.add_argument("--repair", action="store_true",
+                    help="fix the deterministic र्इ -> ई artefact instead of dropping the row")
     ap.add_argument("--keep-shortest", type=float, default=0.0,
                     help="drop the bottom fraction by score, e.g. 0.2")
     args = ap.parse_args()
 
     rows, dropped = [], {}
-    seen = []
+    # Near-duplicate detection was O(n^2) and stalled at 10k rows. Bucket by the opening
+    # characters instead: rows that differ at the start cannot be 0.85 similar anyway.
+    seen = {}
+    import collections
+    buckets = collections.defaultdict(list)
 
     def drop(reason):
         dropped[reason] = dropped.get(reason, 0) + 1
@@ -113,13 +119,20 @@ def main():
                     drop("latin_heavy")
                     continue
                 if broken_script(c):
-                    drop("broken_script")
-                    continue
+                    if args.repair:
+                        c = repair_script(c)
+                        if broken_script(c):
+                            drop("broken_script")
+                            continue
+                    else:
+                        drop("broken_script")
+                        continue
                 s = shingles(c)
-                if any(len(s & o) / max(len(s | o), 1) >= 0.85 for o in seen):
+                key = " ".join(c.split())[:30]
+                if any(len(s & o) / max(len(s | o), 1) >= 0.85 for o in buckets[key]):
                     drop("near_duplicate")
                     continue
-                seen.append(s)
+                buckets[key].append(s)
                 rows.append({"prompt": p, "completion": c, "quality": score(row)})
 
     before = len(rows)
@@ -147,6 +160,11 @@ def main():
         "completion_chars_p10": lens[len(lens) // 10],
         "output": str(out),
     }, ensure_ascii=False, indent=1))
+
+
+def repair_script(text):
+    """The generator writes ई as र्+इ. Deterministic, so it can be undone, not just dropped."""
+    return re.sub(r"र्‍?इ", "ई", text)
 
 
 def broken_script(text):
