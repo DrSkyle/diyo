@@ -1,0 +1,69 @@
+name: eval
+
+# Diyo-1 is a LoRA adapter on top of Qwen3.5-2B. Converting and running it needs
+# torch (~1.8GB installed) and the 1.2GB base weights, which the dev box cannot
+# hold. The runner can, and the result is reproducible by anyone.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "evals/**"
+      - "artifacts/diyo-1-lora/**"
+      - ".github/workflows/eval.yml"
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python deps
+        run: |
+          pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet transformers gguf safetensors sentencepiece
+
+      - name: Base weights
+        run: curl -L --retry 3 -o base.gguf \
+          "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf"
+
+      - name: Build llama.cpp
+        run: |
+          git clone --depth 1 https://github.com/ggml-org/llama.cpp
+          cmake -S llama.cpp -B llama.cpp/build -DCMAKE_BUILD_TYPE=Release -DLLAMA_CURL=OFF
+          cmake --build llama.cpp/build -j4 --target llama-server
+
+      - name: Convert the LoRA to GGUF
+        run: |
+          python llama.cpp/convert_lora_to_gguf.py artifacts/diyo-1-lora \
+            --base-model-id unsloth/Qwen3.5-2B \
+            --outfile diyo-1-lora.gguf --outtype f16
+          ls -lh diyo-1-lora.gguf
+
+      - name: Serve base + adapter
+        run: |
+          nohup ./llama.cpp/build/bin/llama-server \
+            -m base.gguf --lora diyo-1-lora.gguf \
+            --port 8080 -c 2048 -t 4 --no-webui --reasoning off \
+            > server.log 2>&1 &
+          for i in $(seq 1 90); do
+            if curl -sf http://127.0.0.1:8080/health > /dev/null; then echo "ready after ${i}s"; exit 0; fi
+            sleep 2
+          done
+          tail -30 server.log; exit 1
+
+      - name: Score against the 30 cases
+        run: |
+          set +e
+          python3 evals/run_eval.py --endpoint http://127.0.0.1:8080/v1 \
+            --model diyo-1-lora --fresh | tee result.txt
+          code=${PIPESTATUS[0]}
+          echo "---- summary ----"
+          grep -E "passed|BLOCKING" result.txt || true
+          echo "exit=${code}"
+          exit 0
