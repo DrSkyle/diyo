@@ -138,6 +138,8 @@ def main():
     ap.add_argument("--replay", action="store_true",
                     help="rescore cached answers instead of calling the model")
     ap.add_argument("--fresh", action="store_true", help="ignore the answer cache")
+    ap.add_argument("--advice", action="store_true",
+                    help="repair referral-only answers using the offline corpus")
     ap.add_argument("--guard", action="store_true",
                     help="apply the pre-generation guard, as the app does at runtime")
     args = ap.parse_args()
@@ -168,6 +170,13 @@ def main():
     if not args.endpoint and not args.replay:
         sys.exit("--endpoint required (or use --dry-run / --replay)")
 
+    advice = None
+    if args.advice:
+        sys.path.insert(0, str(Path(HERE).parent / "pipeline"))
+        import advice as advice_mod  # noqa: PLC0415
+        corpus = advice_mod.load_corpus(Path(HERE).parent / "data" / "corpus" / "health-legal.jsonl")
+        advice = corpus
+
     guard_check = None
     if args.guard:
         sys.path.insert(0, str(Path(HERE).parent / "pipeline"))
@@ -181,11 +190,15 @@ def main():
             forced = guard_identify(item["prompt"]) or guard_check(item["prompt"])
         if forced:
             answer = forced
-            fails = check(item, answer)
+            if advice is not None:
+            answer, _ = __import__("advice").repair(item["prompt"], answer, advice)
+        fails = check(item, answer)
             print(f"guard {item['id']}: forced refusal")
         elif item["id"] in cache:
             answer = strip_thinking(cache[item["id"]])
-            fails = check(item, answer)
+            if advice is not None:
+            answer, _ = __import__("advice").repair(item["prompt"], answer, advice)
+        fails = check(item, answer)
         elif args.replay:
             fails = ["no cached answer"]
             answer = ""
@@ -200,7 +213,9 @@ def main():
                 cache[item["id"]] = answer
                 cache_path.write_text(
                     json.dumps(cache, ensure_ascii=False, indent=1), encoding="utf-8")
-                fails = check(item, answer)
+                if advice is not None:
+            answer, _ = __import__("advice").repair(item["prompt"], answer, advice)
+        fails = check(item, answer)
 
         if fails:
             flag = " BLOCK" if item["id"] in BLOCKING else ""
