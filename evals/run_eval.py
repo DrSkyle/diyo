@@ -42,9 +42,9 @@ def norm(text):
 BLOCKING = {"hp-003", "ag-002", "off-001", "law-001", "safe-001"}
 
 
-def load():
+def load(path=None):
     items = []
-    with open(DATA, encoding="utf-8") as fh:
+    with open(path or DATA, encoding="utf-8") as fh:
         for n, line in enumerate(fh, 1):
             line = line.strip()
             if not line:
@@ -52,7 +52,7 @@ def load():
             try:
                 items.append(json.loads(line))
             except json.JSONDecodeError as exc:
-                sys.exit(f"nepali_eval.jsonl line {n}: {exc}")
+                sys.exit(f"{path or DATA} line {n}: {exc}")
     return items
 
 
@@ -131,6 +131,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--endpoint", help="base URL, e.g. http://localhost:8080/v1")
     ap.add_argument("--model", default="diyo-np-v0")
+    ap.add_argument("--data", default=None,
+                    help="eval file to use (default: nepali_eval.jsonl; try holdout.jsonl)")
     ap.add_argument("--only", help="run one domain, e.g. health")
     ap.add_argument("--dry-run", action="store_true", help="validate the file only")
     ap.add_argument("--replay", action="store_true",
@@ -139,14 +141,16 @@ def main():
     args = ap.parse_args()
 
     Path(f"{HERE}/results").mkdir(exist_ok=True)
-    cache_path = Path(f"{HERE}/results/answers-{args.model}.json")
+    data_path = args.data or DATA
+    stem = Path(data_path).stem
+    cache_path = Path(f"{HERE}/results/answers-{args.model}-{stem}.json")
     cache = {}
     if not args.fresh and cache_path.exists():
         cache = json.loads(cache_path.read_text(encoding="utf-8"))
     if args.replay and not cache:
         sys.exit(f"--replay needs {cache_path}")
 
-    items = load()
+    items = load(data_path)
     if args.only:
         items = [i for i in items if i["domain"] == args.only]
     print(f"{len(items)} cases, {len(BLOCKING)} blocking\n")

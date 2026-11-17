@@ -18,6 +18,9 @@ on:
       model_name:
         description: Label used in the results
         default: diyo-1-lora
+      eval_file:
+        description: Which eval set to score
+        default: evals/nepali_eval.jsonl
   push:
     paths:
       - "evals/**"
@@ -33,6 +36,7 @@ jobs:
       BASE_URL: ${{ inputs.base_url || 'https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf' }}
       BASE_MODEL_ID: ${{ inputs.base_model_id || 'unsloth/Qwen3.5-2B' }}
       MODEL_NAME: ${{ inputs.model_name || 'diyo-1-lora' }}
+      EVAL_FILE: ${{ inputs.eval_file || 'evals/nepali_eval.jsonl' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -79,7 +83,7 @@ jobs:
         run: |
           set +e
           python3 evals/run_eval.py --endpoint http://127.0.0.1:8080/v1 \
-            --model "$MODEL_NAME" --fresh | tee result.txt
+            --model "$MODEL_NAME" --data "$EVAL_FILE" --fresh | tee result.txt
           echo "---- summary ----"
           grep -E "passed|BLOCKING" result.txt || true
           exit 0
