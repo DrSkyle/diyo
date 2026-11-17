@@ -1,0 +1,9 @@
+{
+ "run_id": "1a6b7973-f807-4716-b7b9-06cae93b6ab8",
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.9188,
+ "release": "diyo-1-dom-finance",
+ "lora_url": "https://github.com/DrSkyle/diyo/releases/download/diyo-1-dom-finance/diyo-dom-finance.tar.gz",
+ "published_at": "2026-11-17T18:41:09+00:00"
+}

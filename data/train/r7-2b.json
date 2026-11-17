@@ -35,5 +35,10 @@
   ],
   "pattern": "twelve of thirteen failures are one of two shapes: referral without concrete advice, or over-refusal on a simple question (boiling water, Nepal's capital).",
   "verdict": "best model so far \u2014 ties r2 on the 32 (25) and beats it on the holdout (14 vs 13), with zero blocking failures, from a 1,779-row clean slice."
+ },
+ "eval_with_advice": {
+  "thirty_two": 25,
+  "holdout": 12,
+  "verdict": "the referral repair did not help r7 and cost 2 holdout cases (14 -> 12). Its corpus match was crude (first 12 chars), so it damaged good answers on unseen questions. Off by default; the corpus stays as retrieval, not as a patch."
  }
 }

@@ -1,0 +1,9 @@
+{
+ "run_id": "a4daf49b-a4bd-424a-8f1f-1f24b93ef9ae",
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.9063,
+ "release": "diyo-1-dom-education",
+ "lora_url": "https://github.com/DrSkyle/diyo/releases/download/diyo-1-dom-education/diyo-dom-education.tar.gz",
+ "published_at": "2026-11-17T18:41:57+00:00"
+}

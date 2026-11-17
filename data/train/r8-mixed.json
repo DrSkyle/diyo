@@ -1,0 +1,11 @@
+{
+ "name": "r8-mixed",
+ "run_id": "a5c73b5c-f176-41a5-b52a-6e02f26da762",
+ "rows": 6772,
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.7443,
+ "credits_before": 1244.0,
+ "credits_after": 1244.0,
+ "adapter_asset": "/home/skyayaaaa.guest/diyo/artifacts/diyo-r8-mixed.tar.gz"
+}

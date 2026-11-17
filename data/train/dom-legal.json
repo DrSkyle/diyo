@@ -1,0 +1,9 @@
+{
+ "run_id": "fc451994-b06e-4bdb-b763-5ed7290231b3",
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.8704,
+ "release": "diyo-1-dom-legal",
+ "lora_url": "https://github.com/DrSkyle/diyo/releases/download/diyo-1-dom-legal/diyo-dom-legal.tar.gz",
+ "published_at": "2026-11-17T18:40:28+00:00"
+}

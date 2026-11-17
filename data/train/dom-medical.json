@@ -1,0 +1,9 @@
+{
+ "run_id": "ade50069-b031-4763-89b1-2d7cfcabf349",
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.8557,
+ "release": "diyo-1-dom-medical",
+ "lora_url": "https://github.com/DrSkyle/diyo/releases/download/diyo-1-dom-medical/diyo-dom-medical.tar.gz",
+ "published_at": "2026-11-17T18:39:16+00:00"
+}
