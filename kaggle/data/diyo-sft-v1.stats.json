@@ -1,0 +1,13 @@
+{
+ "rows": 2256,
+ "sources": [
+  "diyo-agriculture-v1.jsonl",
+  "diyo-daily-v1.jsonl",
+  "diyo-health-v1.jsonl",
+  "diyo-paperwork-v1.jsonl",
+  "diyo-rights-v1.jsonl",
+  "asr-robust-v0.jsonl"
+ ],
+ "leaked_eval_cases": 0,
+ "avg_completion_chars": 265
+}

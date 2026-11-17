@@ -1,21 +1,38 @@
 name: eval
 
-# Diyo-1 is a LoRA adapter on top of Qwen3.5-2B. Converting and running it needs
-# torch (~1.8GB installed) and the 1.2GB base weights, which the dev box cannot
-# hold. The runner can, and the result is reproducible by anyone.
+# Scores a LoRA adapter against the 30-case benchmark. Defaults to Diyo-1 on Qwen3.5-2B;
+# override the inputs to score the same data on the Himalaya Gemma 4 base.
 
 on:
   workflow_dispatch:
+    inputs:
+      lora_dir:
+        description: Adapter directory in the repo
+        default: artifacts/diyo-1-lora
+      base_url:
+        description: GGUF URL for the base model
+        default: https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf
+      base_model_id:
+        description: HF repo id for the base (used for the LoRA conversion)
+        default: unsloth/Qwen3.5-2B
+      model_name:
+        description: Label used in the results
+        default: diyo-1-lora
   push:
     paths:
       - "evals/**"
-      - "artifacts/diyo-1-lora/**"
+      - "artifacts/**"
       - ".github/workflows/eval.yml"
 
 jobs:
   score:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      LORA_DIR: ${{ inputs.lora_dir || 'artifacts/diyo-1-lora' }}
+      BASE_URL: ${{ inputs.base_url || 'https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf' }}
+      BASE_MODEL_ID: ${{ inputs.base_model_id || 'unsloth/Qwen3.5-2B' }}
+      MODEL_NAME: ${{ inputs.model_name || 'diyo-1-lora' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -30,8 +47,7 @@ jobs:
 
       - name: Base weights
         run: |
-          BASE="https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf"
-          curl -L --retry 3 -o base.gguf "$BASE"
+          curl -L --retry 3 -o base.gguf "$BASE_URL"
           ls -lh base.gguf
 
       - name: Build llama.cpp
@@ -42,15 +58,15 @@ jobs:
 
       - name: Convert the LoRA to GGUF
         run: |
-          python llama.cpp/convert_lora_to_gguf.py artifacts/diyo-1-lora \
-            --base-model-id unsloth/Qwen3.5-2B \
-            --outfile diyo-1-lora.gguf --outtype f16
-          ls -lh diyo-1-lora.gguf
+          python llama.cpp/convert_lora_to_gguf.py "$LORA_DIR" \
+            --base-model-id "$BASE_MODEL_ID" \
+            --outfile adapter.gguf --outtype f16
+          ls -lh adapter.gguf
 
       - name: Serve base + adapter
         run: |
           nohup ./llama.cpp/build/bin/llama-server \
-            -m base.gguf --lora diyo-1-lora.gguf \
+            -m base.gguf --lora adapter.gguf \
             --port 8080 -c 2048 -t 4 --no-webui --reasoning off \
             > server.log 2>&1 &
           for i in $(seq 1 90); do
@@ -63,9 +79,7 @@ jobs:
         run: |
           set +e
           python3 evals/run_eval.py --endpoint http://127.0.0.1:8080/v1 \
-            --model diyo-1-lora --fresh | tee result.txt
-          code=${PIPESTATUS[0]}
+            --model "$MODEL_NAME" --fresh | tee result.txt
           echo "---- summary ----"
           grep -E "passed|BLOCKING" result.txt || true
-          echo "exit=${code}"
           exit 0
