@@ -1,0 +1,9 @@
+{
+ "run_id": "84e38199-c774-499a-8a44-3e66e22cd28e",
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.9094,
+ "release": "diyo-1-r10-gold",
+ "lora_url": "https://github.com/DrSkyle/diyo/releases/download/diyo-1-r10-gold/diyo-r10-gold.tar.gz",
+ "published_at": "2026-11-17T20:38:10+00:00"
+}

@@ -75,9 +75,18 @@ def main():
            f"Diyo-1 {args.name}", "--notes", notes)
     if r.returncode != 0 and "already exists" not in (r.stderr or ""):
         log("release create: " + (r.stderr or r.stdout)[:300])
-    else:
-        sh("gh", "release", "upload", tag, str(tarball), "--clobber")
-    log(f"release {tag}")
+    sh("gh", "release", "upload", tag, str(tarball), "--clobber")
+    # An eval against an empty release is a wasted run (r10). Verify the asset is downloadable.
+    api = sh("gh", "api", f"repos/DrSkyle/diyo/releases/tags/{tag}",
+             "--jq", '.assets | map(select(.name == env.A)) | length',
+             env={**os.environ, "A": tarball.name})
+    if api.stdout.strip() != "1":
+        raise SystemExit(f"asset missing from release {tag}: {api.stdout} {api.stderr}")
+    probe = sh("curl", "-sL", "-r", "0-0", "-o", "/dev/null", "-w", "%{http_code}",
+               f"https://github.com/DrSkyle/diyo/releases/download/{tag}/{tarball.name}")
+    if probe.stdout.strip() not in ("200", "206"):
+        raise SystemExit(f"asset not downloadable (HTTP {probe.stdout.strip()}) for {tag}")
+    log(f"release {tag} verified")
 
     url = f"https://github.com/DrSkyle/diyo/releases/download/{tag}/diyo-{args.name}.tar.gz"
     for label, extra in (("32", []), ("holdout", ["-f", "eval_file=evals/holdout.jsonl"])):

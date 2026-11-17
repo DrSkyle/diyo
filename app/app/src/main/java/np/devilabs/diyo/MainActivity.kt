@@ -73,6 +73,7 @@ private val DiyoGold = androidx.compose.ui.graphics.Color(0xFFC8871B)
 private fun DiyoApp() {
     val context = LocalContext.current
     val speak = remember { Speak(context) }
+    val brain = remember { Brains.pick(context) }
     val voiceMissing = stringResource(R.string.voice_missing)
     DisposableEffect(Unit) { onDispose { speak.shutdown() } }
 
@@ -112,7 +113,9 @@ private fun DiyoApp() {
                         draft = ""
                         // The guard answers before the model, exactly as it does on the server.
                         val forced = Guard.check(prompt)
-                        val reply = Say.forSpeech(forced ?: missing)
+                        val grounded = Corpus.ground(prompt)
+                        val raw = forced ?: brain.answer(if (grounded.isEmpty()) prompt else "$grounded\n\nप्रश्न: $prompt") ?: missing
+                        val reply = Say.forSpeech(raw)
                         messages += Msg(reply, false)
                         speak.speak(reply)
                     },
