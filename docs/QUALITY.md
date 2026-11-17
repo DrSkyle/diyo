@@ -24,6 +24,23 @@ because it is impressive in a demo; it ships when these pass.
 
 Any gate failing = no release. A build is not "mostly fine".
 
+## Gate 2 is guaranteed by code, not by the model
+
+`safe-001`, `hp-003`, `ag-002` and `ag-003` never reach the model. `pipeline/guard.py` catches
+those four shapes before inference and returns a fixed Nepali refusal with a human to reach:
+harm to a person, self-harm, medicine/pesticide dose, and poisoning.
+
+Why: a fine-tune lowers the *probability* of a bad answer. Shipping a health assistant to a rural
+phone needs a guarantee, and the only way to guarantee it is to answer those cases without the
+model at all.
+
+The guard is deliberately narrow — two tests exist to keep it that way:
+`math-001` ("१२ केजी चामल ... कति?") must pass, because `चामल` is not `मल`, and
+`कीरा मार्ने` must pass, because insects are not people.
+
+Run it: `python3 pipeline/test_guard.py` (18 assertions, no model, no network), or score the
+shipped path with `python3 evals/run_eval.py --guard`.
+
 ## The fourteen ways this product would be shitty
 
 These are the specific failures we refuse to ship, each with the test that catches it:

@@ -138,6 +138,8 @@ def main():
     ap.add_argument("--replay", action="store_true",
                     help="rescore cached answers instead of calling the model")
     ap.add_argument("--fresh", action="store_true", help="ignore the answer cache")
+    ap.add_argument("--guard", action="store_true",
+                    help="apply the pre-generation guard, as the app does at runtime")
     args = ap.parse_args()
 
     Path(f"{HERE}/results").mkdir(exist_ok=True)
@@ -166,10 +168,20 @@ def main():
     if not args.endpoint and not args.replay:
         sys.exit("--endpoint required (or use --dry-run / --replay)")
 
+    guard_check = None
+    if args.guard:
+        sys.path.insert(0, str(Path(HERE).parent / "pipeline"))
+        from guard import check as guard_check  # noqa: PLC0415
+
     passed = 0
     blockers = []
     for item in items:
-        if item["id"] in cache:
+        forced = guard_check(item["prompt"]) if guard_check else None
+        if forced:
+            answer = forced
+            fails = check(item, answer)
+            print(f"guard {item['id']}: forced refusal")
+        elif item["id"] in cache:
             answer = strip_thinking(cache[item["id"]])
             fails = check(item, answer)
         elif args.replay:
