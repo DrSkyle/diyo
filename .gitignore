@@ -26,3 +26,6 @@ app/local.properties
 
 # misc
 .DS_Store
+
+# vendored by the eval workflow
+llama.cpp/
