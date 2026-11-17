@@ -1,0 +1,18 @@
+{
+ "run_id": "b7825800-e06d-453d-9a78-b6dc5f9c3134",
+ "dataset_id": "b4b461e5-d400-44a6-9f6a-047ef8c9b5a9",
+ "model": "Qwen/Qwen3.5-2B",
+ "rows": 2256,
+ "status": "succeeded",
+ "iterations": 2.0,
+ "best_win_rate": 0.9024,
+ "credits_before": 1969.0,
+ "credits_after": 1609.0,
+ "credits_spent": 360.0,
+ "adapter_files": [
+  "README.md",
+  "adapter_config.json",
+  "adapter_model.safetensors",
+  "chat_template.jinja"
+ ]
+}
