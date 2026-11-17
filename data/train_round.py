@@ -55,7 +55,7 @@ def main():
     total = 0
     # Only raw generation outputs. Exclude Adaption's derived datasets (it re-uploads
     # "behaviour-v0 (augmented)" and our own processed "behaviour-v1"), which duplicated rows.
-    skip = ("augmented", "behaviour-v")
+    skip = ("augmented", "behaviour-v", "behaviour-r")
     seen = set()
     for d in client.datasets.list():
         if not d.name.startswith("diyo-") or d.status != "succeeded" or not d.row_count:

@@ -31,7 +31,7 @@ def norm(text):
 
 
 def main():
-    skip = ("augmented", "behaviour-v")   # derived datasets duplicate the raw rows
+    skip = ("augmented", "behaviour-v", "behaviour-r")   # derived datasets duplicate the raw rows
     raw = [p for p in sorted((ROOT / "data" / "raw").glob("diyo-*.jsonl"))
            if not any(x in p.name for x in skip)]
     inputs = [str(p) for p in raw]
