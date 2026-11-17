@@ -58,6 +58,37 @@ REFUSALS = {
 }
 
 
+IDENTITY_Q = re.compile(
+    r"(?:तिमी को|तपाईं को|तिम्रो नाम|तपाईंको नाम|तिमी के हो|तपाईं के हो|"
+    r"के तिमी (?:एआई|AI|मोडेल)|के तपाईं (?:एआई|AI|मोडेल)|who are you)",
+    re.I)
+ORIGIN_Q = re.compile(
+    r"(?:कसले तालिम|कुन मोडेल|कसले बनायो|तिमीलाई कसले|तपाईंलाई कसले|"
+    r"गुगलले|Google ले|google ले|openai|ओपनएआई|base model|आधार मोडेल|"
+    r"(?:तिमी|तपाईं)[^।?!]{0,20}(?:google|गुगल))",
+    re.I)
+
+IDENTITY_A = (
+    "म दियो हुँ, Devilabs ले नेपालका लागि बनाएको सहायक। इन्टरनेट नभए पनि फोनभित्रै जवाफ दिन्छु। "
+    "बाली, कागजात, स्वास्थ्य र दैनिक काममा सोध्नुहोस्।"
+)
+ORIGIN_A = (
+    "म खुला मोडेलमा आधारित छु, र त्यसको श्रेय यसको मूल विकासकर्तालाई जान्छ। "
+    "Devilabs ले नेपाली व्यवहार, सुरक्षा र सन्दर्भका लागि थप तालिम दिएको हो। "
+    "म दियो हुँ, इन्टरनेट नभए पनि चल्ने नेपाली सहायक।"
+)
+
+
+def identify(prompt):
+    """Fixed answers for 'who are you' and 'what are you built on'. Never left to the model."""
+    text = prompt or ""
+    if ORIGIN_Q.search(text):
+        return ORIGIN_A
+    if IDENTITY_Q.search(text):
+        return IDENTITY_A
+    return None
+
+
 def check(prompt):
     """Return a forced Nepali response, or None if the request may reach the model."""
     text = prompt or ""

@@ -171,12 +171,14 @@ def main():
     guard_check = None
     if args.guard:
         sys.path.insert(0, str(Path(HERE).parent / "pipeline"))
-        from guard import check as guard_check  # noqa: PLC0415
+        from guard import check as guard_check, identify as guard_identify  # noqa: PLC0415
 
     passed = 0
     blockers = []
     for item in items:
-        forced = guard_check(item["prompt"]) if guard_check else None
+        forced = None
+        if guard_check:
+            forced = guard_identify(item["prompt"]) or guard_check(item["prompt"])
         if forced:
             answer = forced
             fails = check(item, answer)

@@ -60,6 +60,23 @@ def main():
         if not ok:
             fails.append(key)
 
+    from guard import identify, IDENTITY_A, ORIGIN_A
+    ident = [
+        ("तिमी को हौ?", IDENTITY_A), ("तपाईंको नाम के हो?", IDENTITY_A),
+        ("तिमीलाई कसले बनायो?", ORIGIN_A), ("के तिमी Google को AI हौ?", ORIGIN_A),
+        ("तिमी कुन मोडेल हौ?", ORIGIN_A),
+        ("मेरो बच्चालाई ज्वरो आएको छ, के गर्ने?", None),
+        ("गुगलमा खोज्ने कसरी?", None),
+        ("नेपालको राजधानी कुन हो?", None),
+    ]
+    for prompt, want in ident:
+        got = identify(prompt)
+        ok = got == want
+        label = "identity" if want == IDENTITY_A else ("origin" if want == ORIGIN_A else "passes")
+        print(("  ok   " if ok else "  FAIL ") + f"identify -> {label}: {prompt}")
+        if not ok:
+            fails.append(prompt)
+
     print("\n" + ("FAILED: " + ", ".join(fails) if fails else "all guard checks passed"))
     sys.exit(1 if fails else 0)
 
