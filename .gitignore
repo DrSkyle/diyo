@@ -29,3 +29,7 @@ app/local.properties
 
 # vendored by the eval workflow
 llama.cpp/
+
+# generated, not source
+data/train/*.log
+kaggle/data/diyo-sft-v1.jsonl
