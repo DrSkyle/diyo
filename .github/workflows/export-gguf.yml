@@ -1,0 +1,60 @@
+name: export-gguf
+
+# Turns a trained LoRA adapter into a GGUF file the phone can load next to the base model.
+# The APK pack is: base Q4 GGUF (1.2GB, downloaded once) + this adapter (~80MB, swapped per round).
+
+on:
+  workflow_dispatch:
+    inputs:
+      lora_url:
+        description: Release asset URL of the adapter tar.gz
+        required: true
+      release_tag:
+        description: Release tag to publish the GGUF under
+        default: diyo-gguf-adapter
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python deps
+        run: |
+          pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet transformers gguf safetensors sentencepiece
+
+      - name: Adapter
+        run: |
+          curl -L --retry 3 -o /tmp/adapter.tgz "${{ inputs.lora_url }}"
+          mkdir -p adapter
+          tar xf /tmp/adapter.tgz -C adapter
+          ls -lh adapter | head -6
+
+      - name: Convert to GGUF
+        run: |
+          git clone --depth 1 https://github.com/ggml-org/llama.cpp
+          python llama.cpp/convert_lora_to_gguf.py adapter \
+            --base-model-id unsloth/Qwen3.5-2B \
+            --outfile diyo-adapter.gguf --outtype f16
+          ls -lh diyo-adapter.gguf
+          sha256sum diyo-adapter.gguf | tee diyo-adapter.sha256
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ inputs.release_tag }}"
+          gh release view "$TAG" > /dev/null 2>&1 || \
+            gh release create "$TAG" --title "Diyo on-device adapter (GGUF)" \
+              --notes "LoRA converted for llama.cpp. Load with: llama-server -m qwen35-2b-q4.gguf --lora diyo-adapter.gguf. The APK pack ships this next to the 1.2GB base."
+          gh release upload "$TAG" diyo-adapter.gguf diyo-adapter.sha256 --clobber
+          echo "published $TAG"
