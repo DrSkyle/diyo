@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="ne">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>दियो — इन्टरनेट नभए पनि चल्ने नेपाली सहायक</title>
+<meta name="description" content="दियो — इन्टरनेट नभए पनि चल्ने नेपाली सहायक। बाली, कागजात, स्वास्थ्य, पैसा — जे सोध्नु छ सोध्नुहोस्। जवाफ मात्र होइन, के गर्ने भन्छ। डेटा नेपालमै रहन्छ।">
+<meta name="theme-color" content="#0C0B09">
+<meta property="og:title" content="दियो — Diyo">
+<meta property="og:description" content="A Nepali assistant that answers without a network, on the cheapest Android phone.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://devilabs.dev">
+<style>
+  :root {
+    --bg: #0C0B09;
+    --ink: #EDE7DE;
+    --muted: #A79C8E;
+    --faint: #8B8175;
+    --lamp: #E8A33D;
+    --line: rgba(237, 231, 222, .12);
+    --measure: 56ch;
+    --pad: clamp(20px, 6vw, 96px);
+    --font: "Noto Sans Devanagari", "Noto Sans", system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--bg); }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: clamp(16px, 1.05vw, 18px);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* the lamp's light, painted once, on the background plane */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -20% -20% auto -20%;
+    height: 120vh;
+    background:
+      radial-gradient(38% 46% at 18% 26%, rgba(232, 163, 61, .13), transparent 70%),
+      radial-gradient(60% 40% at 50% 0%, rgba(232, 163, 61, .05), transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--lamp);
+    color: #17120A;
+    padding: 10px 16px;
+    z-index: 10;
+  }
+  .skip:focus,
+  .skip:focus-visible { left: 12px; top: 12px; }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 56px) var(--pad) clamp(40px, 7vw, 88px);
+  }
+
+  .masthead {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .masthead strong {
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: .16em;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: clamp(40px, 7vw, 96px);
+    align-items: start;
+    margin-top: clamp(56px, 11vh, 120px);
+  }
+
+  .flame {
+    width: 34px;
+    height: 46px;
+    display: block;
+    margin-bottom: clamp(24px, 4vh, 40px);
+    overflow: visible;
+  }
+  .flame .wick { fill: var(--faint); }
+  .flame .fire {
+    fill: var(--lamp);
+    transform-origin: 50% 88%;
+    animation: breathe 7s ease-in-out infinite;
+  }
+  .flame .halo {
+    fill: var(--lamp);
+    opacity: .16;
+    transform-origin: 50% 55%;
+    animation: breathe 7s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: .95; }
+    50%      { transform: scale(1.06, .96); opacity: 1; }
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(64px, 13vw, 154px);
+    line-height: .92;
+    font-weight: 500;
+    letter-spacing: -.02em;
+    color: var(--ink);
+  }
+  h1 .en {
+    display: block;
+    font-size: clamp(12px, 1.4vw, 15px);
+    line-height: 1.4;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-top: clamp(14px, 2vh, 22px);
+    font-weight: 400;
+  }
+
+  .claim {
+    margin: clamp(28px, 4vh, 40px) 0 0;
+    max-width: var(--measure);
+    font-size: clamp(20px, 2.4vw, 27px);
+    line-height: 1.42;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .claim .en {
+    display: block;
+    margin-top: 12px;
+    font-size: clamp(14px, 1.2vw, 16px);
+    line-height: 1.6;
+    color: var(--muted);
+    letter-spacing: .002em;
+  }
+
+  .proof {
+    margin: clamp(36px, 5vh, 56px) 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+  .proof li {
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .proof li:last-child { border-bottom: 1px solid var(--line); }
+  .proof .np { color: var(--ink); }
+  .proof .en { color: var(--faint); font-size: 13.5px; letter-spacing: .01em; }
+
+  /* ── the proof object: a real exchange, with no network ───────────── */
+  .transcript {
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: clamp(20px, 3vw, 30px);
+    background: linear-gradient(180deg, rgba(237,231,222,.028), rgba(237,231,222,0));
+  }
+  .transcript header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--faint);
+    flex: none;
+  }
+  .transcript p {
+    margin: 18px 0 0;
+    font-size: clamp(15px, 1.35vw, 17px);
+    line-height: 1.62;
+  }
+  .transcript .user { color: var(--muted); }
+  .transcript .diyo { color: var(--ink); }
+  .transcript .tag {
+    display: block;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 5px;
+  }
+  .transcript .diyo .tag { color: var(--lamp); opacity: .8; }
+  .transcript .exchange { padding-top: 18px; }
+  .transcript .exchange + .exchange {
+    margin-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .transcript .exchange p { margin: 10px 0 0; }
+  .transcript .exchange p:first-child { margin-top: 0; }
+
+  .transcript .note {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--faint);
+  }
+
+  /* ── action ───────────────────────────────────────────────────────── */
+  .action {
+    margin-top: clamp(48px, 7vh, 72px);
+    padding-top: clamp(28px, 4vh, 40px);
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, .85fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+  }
+  .action h2 {
+    margin: 0 0 6px;
+    font-size: clamp(18px, 1.8vw, 21px);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .action p { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 42ch; }
+
+  form { display: grid; gap: 10px; }
+  label {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .field { display: flex; gap: 8px; flex-wrap: wrap; }
+  input[type="email"] {
+    flex: 1 1 220px;
+    min-width: 0;
+    font: inherit;
+    font-size: 16px;              /* 16px min: iOS must not zoom */
+    color: var(--ink);
+    background: rgba(237, 231, 222, .045);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 12px 14px;
+    transition: border-color .18s ease-out, background .18s ease-out;
+  }
+  input[type="email"]::placeholder { color: var(--faint); }
+  input[type="email"]:hover { border-color: rgba(237, 231, 222, .24); }
+  input[type="email"]:focus-visible {
+    outline: 2px solid var(--lamp);
+    outline-offset: 2px;
+    border-color: transparent;
+  }
+  input[type="email"][aria-invalid="true"] { border-color: #C4553B; }
+
+  button {
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 20px;
+    color: #17120A;
+    background: var(--lamp);
+    border: 1px solid var(--lamp);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background .18s ease-out, transform .18s ease-out;
+  }
+  button:hover { background: #F0B255; border-color: #F0B255; }
+  button:active { transform: translateY(1px); }
+  button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .status {
+    min-height: 1.4em;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .status[data-state="error"] { color: #E08A72; }
+  .status a { color: var(--ink); text-decoration-color: var(--lamp); text-underline-offset: 3px; }
+
+  footer {
+    margin-top: clamp(56px, 9vh, 96px);
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px 30px;
+    flex-wrap: wrap;
+    align-items: baseline;
+    font-size: 12.5px;
+    color: var(--faint);
+    letter-spacing: .02em;
+  }
+  footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
+  footer a:hover { color: var(--ink); border-bottom-color: var(--lamp); }
+  footer .spacer { flex: 1; }
+
+  a:focus-visible { outline: 2px solid var(--lamp); outline-offset: 3px; }
+
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; gap: clamp(36px, 7vh, 56px); }
+    .action { grid-template-columns: 1fr; }
+    .transcript { order: 2; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flame .fire, .flame .halo { animation: none; }
+    * { transition-duration: .01ms !important; }
+  }
+
+  @media (forced-colors: active) {
+    .transcript, input[type="email"] { border: 1px solid CanvasText; }
+    button { border: 1px solid ButtonText; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">मुख्य भागमा जानुहोस्</a>
+
+<main id="main">
+  <div class="masthead">
+    <strong>दियो</strong>
+    <span aria-hidden="true">·</span>
+    <span>Devilabs</span>
+  </div>
+
+  <div class="layout">
+    <section>
+      <svg class="flame" viewBox="0 0 34 46" aria-hidden="true" focusable="false">
+        <ellipse class="halo" cx="17" cy="26" rx="16" ry="18"/>
+        <path class="fire" d="M17 6c5 7 8 10.5 8 15.5a8 8 0 0 1-16 0C9 16.5 12 13 17 6z"/>
+        <rect class="wick" x="16.2" y="31" width="1.6" height="9" rx=".8"/>
+      </svg>
+
+      <h1>दियो<span class="en" lang="en">Diyo</span></h1>
+
+      <p class="claim">
+        इन्टरनेट नभए पनि चल्ने नेपाली सहायक।
+        <span class="en" lang="en">A Nepali assistant that answers without a network, on the cheapest Android phone.</span>
+      </p>
+
+      <ul class="proof">
+        <li>
+          <span class="np">इन्टरनेट नभए पनि, जे सोध्नु छ सोध्नुहोस्।</span>
+          <span class="en" lang="en">Crops, papers, money, school, health. No bars, no account, no upload.</span>
+        </li>
+        <li>
+          <span class="np">जवाफ मात्र होइन, के गर्ने भन्छ।</span>
+          <span class="en" lang="en">Concrete steps you can take today, then where to go if it needs a person.</span>
+        </li>
+        <li>
+          <span class="np">तपाईंको आवाज र डेटा नेपालमै रहन्छ।</span>
+          <span class="en" lang="en">Voice and data stay in Nepal, under Nepali law.</span>
+        </li>
+      </ul>
+    </section>
+
+    <aside class="transcript" aria-label="इन्टरनेट नभएको बेलाका तीन कुराकानी">
+      <header>
+        <span class="dot" aria-hidden="true"></span>
+        <span>विमान मोड</span>
+        <span aria-hidden="true">·</span>
+        <span>इन्टरनेट छैन</span>
+      </header>
+
+      <div class="exchange">
+        <p class="user"><span class="tag">कृषि</span>
+          धानको पात पहेँलो हुँदै गयो, के गर्ने?</p>
+        <p class="diyo"><span class="tag">दियो</span>
+          पहिले खेतमा पानी जमेको छ कि छैन हेर्नुहोस्; जमेको छ भने निकास गर्नुहोस्। पातको टुप्पो
+          पहेँलो छ भने नाइट्रोजनको कमी हुन सक्छ, तर मल हाल्नुअघि कृषि प्राविधिकलाई देखाउनुहोस्।
+          गोडेर कीरा छ कि छैन हेर्नुहोस्, र नमुना पात लिएर कृषि ज्ञान केन्द्र जानुहोस्।</p>
+      </div>
+
+      <div class="exchange">
+        <p class="user"><span class="tag">कागजात</span>
+          नागरिकतामा जन्म मिति गलत छ, सच्याउन के गर्ने?</p>
+        <p class="diyo"><span class="tag">दियो</span>
+          जन्म दर्ता प्रमाणपत्र, नागरिकताको प्रतिलिपि र निवेदन लिएर जिल्ला प्रशासन कार्यालय
+          जानुहोस्। वडा कार्यालयको सिफारिस पनि मागिन्छ। शुल्क र प्रक्रिया बदलिन सक्ने भएकाले
+          त्यहीँ पुष्टि गर्नुहोस्।</p>
+      </div>
+
+      <div class="exchange">
+        <p class="user"><span class="tag">स्वास्थ्य</span>
+          तीन वर्षकी छोरीलाई तीन दिनदेखि ज्वरो छ, खाँदिन।</p>
+        <p class="diyo"><span class="tag">दियो</span>
+          दिनमा धेरै पटक थोरै-थोरै पानी वा जीवनजल दिनुहोस्; झोल र दूध दिइरहनुहोस्। बाक्लो
+          कम्बलमा नबेर्नुहोस्, हल्का तातो पानीको कपडाले पुछ्नुहोस् — चिसो पानी वा रक्सी होइन।
+          तीन दिनभन्दा बढी भएकोले आजै स्वास्थ्य चौकी जानुहोस्; जाँच गर्नुपर्ने हुन सक्छ।</p>
+      </div>
+
+      <p class="note">सबै जवाफ फोनभित्रै बन्छ। केही पठाइँदैन।</p>
+    </aside>
+  </div>
+
+  <div class="action">
+    <div>
+      <h2>पहिलो संस्करण</h2>
+      <p>नेपालका स्वास्थ्यकर्मी र किसानसँग जाँचेपछि सार्वजनिक गर्नेछौं। खबर पाउन इमेल छोड्नुहोस्।</p>
+    </div>
+
+    <form id="notify" novalidate>
+      <label for="email">इमेल</label>
+      <div class="field">
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
+               placeholder="tapai@example.com" aria-describedby="status">
+        <button type="submit">खबर पाउनुहोस्</button>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <footer>
+    <span>Devilabs · काठमाडौं</span>
+    <span>खुला नेपाली अनुसन्धानमा आधारित</span>
+    <span class="spacer"></span>
+    <a href="https://github.com/DrSkyle/diyo/releases/tag/diyo-preview-0.1">प्रिभ्यू APK</a>
+    <a href="privacy.html">गोपनीयता</a>
+    <a href="mailto:hello@devilabs.dev">hello@devilabs.dev</a>
+  </footer>
+</main>
+
+<script>
+  // No backend, no third party. The form composes a mail the person can read before sending.
+  (function () {
+    var form = document.getElementById("notify");
+    var email = document.getElementById("email");
+    var status = document.getElementById("status");
+    var inbox = "hello@devilabs.dev";
+
+    function say(message, state, href) {
+      status.textContent = "";
+      status.removeAttribute("data-state");
+      if (href) {
+        var a = document.createElement("a");
+        a.href = href;
+        a.textContent = message;
+        status.appendChild(a);
+      } else {
+        status.textContent = message;
+      }
+      if (state) status.setAttribute("data-state", state);
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var value = email.value.trim();
+
+      if (!value) {
+        email.setAttribute("aria-invalid", "true");
+        say("इमेल लेख्नुहोस्।", "error");
+        email.focus();
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+        email.setAttribute("aria-invalid", "true");
+        say("इमेल ठेगाना मिलेन। फेरि हेर्नुहोस्।", "error");
+        email.focus();
+        return;
+      }
+
+      email.removeAttribute("aria-invalid");
+      var subject = encodeURIComponent("दियो — खबर पाउन चाहन्छु");
+      var body = encodeURIComponent("मेरो इमेल: " + value + "\n\nदियोको पहिलो संस्करणको खबर पठाइदिनुहोस्।");
+      var href = "mailto:" + inbox + "?subject=" + subject + "&body=" + body;
+
+      say("इमेल एप खुल्दैछ… खुलेन भने यहाँ थिच्नुहोस्।", "", href);
+      window.location.href = href;
+    });
+
+    email.addEventListener("input", function () {
+      if (email.getAttribute("aria-invalid") === "true") {
+        email.removeAttribute("aria-invalid");
+        say("");
+      }
+    });
+  })();
+</script>
+</body>
+</html>
