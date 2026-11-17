@@ -29,8 +29,10 @@ jobs:
           pip install --quiet transformers gguf safetensors sentencepiece
 
       - name: Base weights
-        run: curl -L --retry 3 -o base.gguf \
-          "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf"
+        run: |
+          BASE="https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf"
+          curl -L --retry 3 -o base.gguf "$BASE"
+          ls -lh base.gguf
 
       - name: Build llama.cpp
         run: |
