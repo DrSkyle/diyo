@@ -81,7 +81,7 @@ def main():
             if "र्इ" in a or "र्इ" in q:
                 drop("glyph_unfixed")
                 continue
-            key = re.sub(r"\s+", " ", a.lower())
+            key = re.sub(r"\s+", " ", q.lower()) + "\x00" + re.sub(r"\s+", " ", a.lower())
             if key in seen:
                 drop("duplicate")
                 continue
