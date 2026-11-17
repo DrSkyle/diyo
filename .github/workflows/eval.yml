@@ -21,6 +21,9 @@ on:
       eval_file:
         description: Which eval set to score
         default: evals/nepali_eval.jsonl
+      lora_url:
+        description: Optional tar.gz of an adapter (release asset); overrides the repo copy
+        default: ""
   push:
     paths:
       - "evals/**"
@@ -43,6 +46,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Adapter from release
+        if: inputs.lora_url != ''
+        run: |
+          curl -L --retry 3 -o /tmp/adapter.tgz "${{ inputs.lora_url }}"
+          mkdir -p "$LORA_DIR"
+          tar xf /tmp/adapter.tgz -C "$LORA_DIR"
+          ls -lh "$LORA_DIR" | head -5
 
       - name: Python deps
         run: |
