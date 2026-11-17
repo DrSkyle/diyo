@@ -1,0 +1,25 @@
+10:55:33 credits before: 1369.0
+10:55:38 diyo-behaviour-v1: 2256 rows
+10:55:38 diyo-daily-v1: 400 rows
+10:55:38 diyo-rights-v1: 400 rows
+10:55:38 diyo-agriculture-v1: 400 rows
+10:55:38 diyo-paperwork-v1: 400 rows
+10:55:43 diyo-behaviour-v0 (augmented): 1091 rows
+10:55:44 diyo-behaviour-v0: 195 rows
+10:55:44 diyo-behaviour-v0: 195 rows
+10:55:44 diyo-health-v1: 200 rows
+10:55:45 10 sources, 5537 raw rows
+{
+ "in": 6122,
+ "kept": 2256,
+ "kept_pct": 36.9,
+ "dropped": {
+  "empty": 2655,
+  "not_nepali": 905,
+  "duplicate": 306
+ },
+ "output": "/home/skyayaaaa.guest/diyo/data/train/diyo-behaviour-r2.csv"
+}
+10:55:52 uploaded: succeeded rows=2256
+10:55:53 run 9a6129b2-04ea-45e6-91ba-f29708df5f73 started (5 iterations)
+10:55:53 running iter=0.0 win=None
