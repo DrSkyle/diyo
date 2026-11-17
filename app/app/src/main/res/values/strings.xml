@@ -12,4 +12,5 @@
     <string name="composer_hint">जे सोध्नु छ लेख्नुहोस्</string>
     <string name="send">पठाउनुहोस्</string>
     <string name="model_missing">यो संस्करणमा मोडेल जोडिएको छैन। सुरक्षा उत्तरहरू भने चल्छन्।</string>
+    <string name="voice_missing">यो फोनमा नेपाली आवाज छैन — लेखाइ मात्र देखाइँदैछ।</string>
 </resources>

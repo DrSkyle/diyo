@@ -2,6 +2,7 @@ package np.devilabs.diyo
 
 import android.os.Build
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -34,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
@@ -68,6 +71,11 @@ private val DiyoGold = androidx.compose.ui.graphics.Color(0xFFC8871B)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiyoApp() {
+    val context = LocalContext.current
+    val speak = remember { Speak(context) }
+    val voiceMissing = stringResource(R.string.voice_missing)
+    DisposableEffect(Unit) { onDispose { speak.shutdown() } }
+
     val tagline = stringResource(R.string.tagline)
     val missing = stringResource(R.string.model_missing)
     val messages = remember { mutableStateListOf(Msg(tagline, false)) }
@@ -104,10 +112,9 @@ private fun DiyoApp() {
                         draft = ""
                         // The guard answers before the model, exactly as it does on the server.
                         val forced = Guard.check(prompt)
-                        messages += Msg(
-                            forced ?: Say.forSpeech(missing),
-                            false
-                        )
+                        val reply = Say.forSpeech(forced ?: missing)
+                        messages += Msg(reply, false)
+                        speak.speak(reply)
                     },
                     enabled = draft.isNotBlank()
                 ) { Text(stringResource(R.string.send)) }
@@ -115,6 +122,14 @@ private fun DiyoApp() {
         }
     ) { inner ->
         Box(Modifier.fillMaxSize().padding(inner)) {
+            if (!speak.hasNepaliVoice) {
+                Text(
+                    text = voiceMissing,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+            }
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
